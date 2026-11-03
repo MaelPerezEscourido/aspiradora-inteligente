@@ -42,3 +42,15 @@ class Vivienda:
 
             for cuadrante in zona.cuadrantes:
                 print(cuadrante)
+
+    def obtener_zona(self, nombre):
+        return self.zonas.get(nombre)
+
+    def establecer_obstaculo(self, nombre_zona, x, y, obstaculo=True):
+        cuadrante = self.obtener_cuadrante(nombre_zona, x, y)
+
+        if cuadrante is None:
+            return False
+
+        cuadrante.obstaculo = obstaculo
+        return True
