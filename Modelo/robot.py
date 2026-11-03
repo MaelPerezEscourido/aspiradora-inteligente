@@ -17,3 +17,6 @@ class Robot:
 
     def obtener_bateria(self):
         return self.bateria
+
+    def recargar_bateria(self):
+        self.bateria = 100
