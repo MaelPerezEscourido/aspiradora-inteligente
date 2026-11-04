@@ -20,7 +20,6 @@ class ControladorFuzzy:
             raise ValueError(
                 "El nivel de batería debe estar entre 0 y 100"
             )
-
         self.simulador.input["suciedad"] = nivel_suciedad
         self.simulador.input["bateria"] = nivel_bateria
 
