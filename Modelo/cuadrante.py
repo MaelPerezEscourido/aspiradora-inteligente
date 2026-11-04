@@ -8,8 +8,11 @@ class Cuadrante:
         self.obstaculo = obstaculo
 
     def limpiar(self, cantidad):
-        if not self.obstaculo:
-            self.suciedad = max(0, self.suciedad - cantidad)
+        if self.obstaculo or cantidad < 0:
+            return False
+
+        self.establecer_suciedad(self.suciedad - cantidad)
+        return True
 
     def esta_limpio(self):
         return self.suciedad == 0
@@ -19,3 +22,10 @@ class Cuadrante:
             return "OBSTACULO"
 
         return f"Cuadrante ({self.x}, {self.y}) - Suciedad: {self.suciedad}%"
+
+    def establecer_suciedad(self, cantidad):
+        if self.obstaculo:
+            return False
+
+        self.suciedad = max(0, min(100, cantidad))
+        return True
