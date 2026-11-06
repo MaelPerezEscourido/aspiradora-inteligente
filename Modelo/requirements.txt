@@ -1,3 +1,5 @@
-scikit-fuzzy
 numpy
-pygamepip show scikit-fuzzy
+scipy
+scikit-fuzzy
+networkx
+packaging
