@@ -35,14 +35,24 @@ class Controlador:
         if cuadrante.esta_limpio():
             return False
 
-        # Calcular la velocidad según suciedad y batería
-        self.actualizar_velocidad(robot, vivienda)
+        if robot.obtener_bateria() <= 0:
+            return False
+
+        # Calcular velocidad mediante lógica difusa
+        velocidad = self.actualizar_velocidad(robot, vivienda)
+
+        # Calcular consumo energético según la velocidad
+        consumo = 0.5 + (velocidad / 100)
+
+        # Comprobar que existe batería suficiente
+        if robot.obtener_bateria() < consumo:
+            return False
 
         # Limpiar el cuadrante
         cuadrante.limpiar(10)
 
-        # Consumir batería
-        robot.consumir_bateria(1)
+        # Consumir batería según la velocidad calculada
+        robot.consumir_bateria(consumo)
 
         return True
 
@@ -51,20 +61,38 @@ class Controlador:
         cuadrante = robot.obtener_cuadrante_actual(vivienda)
 
         if cuadrante is None or cuadrante.obstaculo:
-            return
+            return False
 
         while not cuadrante.esta_limpio() and robot.obtener_bateria() > 0:
 
-            self.limpiar_cuadrante(robot, vivienda)
+            # Intentar realizar un paso de limpieza
+            resultado = self.limpiar_cuadrante(robot, vivienda)
+
+            # Si no se puede limpiar, detener el bucle
+            if not resultado:
+                print("No hay batería suficiente para seguir limpiando.")
+                return False
 
             print(
                 f"Suciedad: {cuadrante.suciedad}% | "
-                f"Batería: {robot.bateria}% | "
+                f"Batería: {robot.bateria:.2f}% | "
                 f"Velocidad: {robot.velocidad:.2f}%"
             )
 
+        return cuadrante.esta_limpio()
+
     def mover_robot(self, robot, vivienda, x, y):
 
+        # Consumo energético por desplazamiento
+        consumo_movimiento = 0.5
+
+        # Comprobar que el destino es un cuadrante vecino
+        distancia = abs(robot.x - x) + abs(robot.y - y)
+
+        if distancia != 1:
+            return False
+
+        # Comprobar que existe y no es un obstáculo
         cuadrante = vivienda.obtener_cuadrante(
             robot.zona_actual, x, y
         )
@@ -72,6 +100,12 @@ class Controlador:
         if cuadrante is None or cuadrante.obstaculo:
             return False
 
+        # Comprobar que hay batería suficiente
+        if robot.obtener_bateria() < consumo_movimiento:
+            return False
+
+        # Consumir batería y mover el robot
+        robot.consumir_bateria(consumo_movimiento)
         robot.moverse(robot.zona_actual, x, y)
 
         return True
@@ -165,10 +199,11 @@ class Controlador:
                 # Elegir aleatoriamente un vecino sin visitar
                 nueva_x, nueva_y = random.choice(vecinos)
 
-                self.mover_robot(robot, vivienda, nueva_x, nueva_y)
-
-                print(f"Moviendo a ({nueva_x}, {nueva_y})")
-
+                if self.mover_robot(robot, vivienda, nueva_x, nueva_y):
+                    print(f"Moviendo a ({nueva_x}, {nueva_y})")
+                else:
+                    print("No se puede continuar el recorrido.")
+                    break
             else:
                 # Si no quedan vecinos nuevos, retroceder
                 camino.pop()
@@ -179,6 +214,8 @@ class Controlador:
 
                 anterior_x, anterior_y = camino[-1]
 
-                self.mover_robot(robot, vivienda, anterior_x, anterior_y)
-
-                print(f"Retrocediendo a ({anterior_x}, {anterior_y})")
+                if self.mover_robot(robot, vivienda, anterior_x, anterior_y):
+                    print(f"Retrocediendo a ({anterior_x}, {anterior_y})")
+                else:
+                    print("No hay batería suficiente para retroceder.")
+                    break

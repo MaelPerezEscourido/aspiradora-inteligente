@@ -4,7 +4,7 @@ class Vista:
         print("\n========== ESTADO DEL ROBOT ==========")
         print(f"Zona actual: {robot.zona_actual}")
         print(f"Posición: ({robot.x}, {robot.y})")
-        print(f"Batería: {robot.bateria}%")
+        print(f"Batería: {robot.bateria:.2f}%")
         print(f"Velocidad: {robot.velocidad:.2f}%")
 
     def mostrar_vivienda(self, vivienda):
