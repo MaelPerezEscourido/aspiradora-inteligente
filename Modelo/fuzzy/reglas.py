@@ -48,6 +48,53 @@ regla_9 = ctrl.Rule(
     velocidad["lenta"]
 )
 
+# Reglas de potencia de aspiración
+
+regla_10 = ctrl.Rule(
+    suciedad["baja"] & bateria["alta"],
+    potencia["baja"]
+)
+
+regla_11 = ctrl.Rule(
+    suciedad["media"] & bateria["alta"],
+    potencia["media"]
+)
+
+regla_12 = ctrl.Rule(
+    suciedad["alta"] & bateria["alta"],
+    potencia["alta"]
+)
+
+regla_13 = ctrl.Rule(
+    suciedad["baja"] & bateria["media"],
+    potencia["baja"]
+)
+
+regla_14 = ctrl.Rule(
+    suciedad["media"] & bateria["media"],
+    potencia["media"]
+)
+
+regla_15 = ctrl.Rule(
+    suciedad["alta"] & bateria["media"],
+    potencia["alta"]
+)
+
+regla_16 = ctrl.Rule(
+    suciedad["baja"] & bateria["baja"],
+    potencia["baja"]
+)
+
+regla_17 = ctrl.Rule(
+    suciedad["media"] & bateria["baja"],
+    potencia["baja"]
+)
+
+regla_18 = ctrl.Rule(
+    suciedad["alta"] & bateria["baja"],
+    potencia["media"]
+)
+
 
 REGLAS = [
     regla_1,
@@ -58,5 +105,14 @@ REGLAS = [
     regla_6,
     regla_7,
     regla_8,
-    regla_9
+    regla_9,
+    regla_10,
+    regla_11,
+    regla_12,
+    regla_13,
+    regla_14,
+    regla_15,
+    regla_16,
+    regla_17,
+    regla_18
 ]

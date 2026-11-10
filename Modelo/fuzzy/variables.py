@@ -21,6 +21,11 @@ velocidad = ctrl.Consequent(
     "velocidad"
 )
 
+potencia = ctrl.Consequent(
+    np.arange(0, 101, 1),
+    "potencia"
+)
+
 
 
 # Conjuntos fuzzy de suciedad
@@ -70,5 +75,21 @@ velocidad["media"] = fuzz.trimf(
 
 velocidad["rapida"] = fuzz.trimf(
     velocidad.universe,
+    [50, 100, 100]
+)
+
+# Conjuntos fuzzy de potencia
+potencia["baja"] = fuzz.trimf(
+    potencia.universe,
+    [0, 0, 50]
+)   
+
+potencia["media"] = fuzz.trimf(
+    potencia.universe,
+    [20, 50, 80]
+)
+
+potencia["alta"] = fuzz.trimf(
+    potencia.universe,
     [50, 100, 100]
 )

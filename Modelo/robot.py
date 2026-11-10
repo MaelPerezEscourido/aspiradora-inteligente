@@ -3,14 +3,17 @@ class Robot:
     def __init__(self, bateria=100):
         self.bateria = max(0, min(100, bateria))
         self.zona_actual = None
-        self.x = 0
-        self.y = 0
+        self.pos_x = 0.0
+        self.pos_y = 0.0
         self.velocidad = 0
 
     def actualizar_posicion(self, zona, x, y):
         self.zona_actual = zona
         self.x = x
         self.y = y
+
+        self.pos_x = float(x)
+        self.pos_y = float(y)
 
     def consumir_bateria(self, cantidad):
         if cantidad < 0:

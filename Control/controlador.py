@@ -83,16 +83,15 @@ class Controlador:
 
     def mover_robot(self, robot, vivienda, x, y):
 
-        # Consumo energético por desplazamiento
         consumo_movimiento = 0.5
 
-        # Comprobar que el destino es un cuadrante vecino
+        # Comprobar que el destino es un vecino
         distancia = abs(robot.x - x) + abs(robot.y - y)
 
         if distancia != 1:
             return False
 
-        # Comprobar que existe y no es un obstáculo
+        # Comprobar que no hay obstáculos
         cuadrante = vivienda.obtener_cuadrante(
             robot.zona_actual, x, y
         )
@@ -100,12 +99,31 @@ class Controlador:
         if cuadrante is None or cuadrante.obstaculo:
             return False
 
-        # Comprobar que hay batería suficiente
+        # Comprobar batería
         if robot.obtener_bateria() < consumo_movimiento:
             return False
 
-        # Consumir batería y mover el robot
+        # Guardar posición inicial
+        inicio_x = robot.pos_x
+        inicio_y = robot.pos_y
+
+        # Movimiento progresivo en cuatro pasos
+        for paso in range(1, 5):
+
+            progreso = paso / 4
+
+            robot.pos_x = inicio_x + (x - inicio_x) * progreso
+            robot.pos_y = inicio_y + (y - inicio_y) * progreso
+
+            print(
+                f"Posición: ({robot.pos_x:.2f}, "
+                f"{robot.pos_y:.2f})"
+            )
+
+        # Consumir batería una vez por desplazamiento
         robot.consumir_bateria(consumo_movimiento)
+
+        # Actualizar el cuadrante al finalizar
         robot.moverse(robot.zona_actual, x, y)
 
         return True
